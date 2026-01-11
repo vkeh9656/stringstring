@@ -243,7 +243,7 @@ export default function MarbleRoulette() {
               (col + 1) * (width / (cols + 1)),
               startY + row * rowHeight,
               35 + Math.random() * 15,
-              0.025 + Math.random() * 0.025,
+              (0.025 + Math.random() * 0.025) * 1.5, // 속도 1.5배 증가
               'bar'
             ));
           }
@@ -258,7 +258,7 @@ export default function MarbleRoulette() {
             width / 2 + (i % 2 === 0 ? -30 : 30),
             120 + i * 80,
             50 - (i % 4) * 5,
-            0.035 + Math.random() * 0.02,
+            (0.035 + Math.random() * 0.02) * 1.5, // 속도 1.5배 증가
             'bar'
           ));
         }
@@ -272,7 +272,7 @@ export default function MarbleRoulette() {
             55 + Math.random() * (width - 110),
             80 + Math.random() * (height - 180),
             22 + Math.random() * 28,
-            0.02 + Math.random() * 0.04,
+            (0.02 + Math.random() * 0.04) * 1.5, // 속도 1.5배 증가
             'spinner'
           ));
         }
