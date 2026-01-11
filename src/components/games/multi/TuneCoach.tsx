@@ -18,7 +18,7 @@ export default function TuneCoach({ gameData, isHost, onBackToRoom }: TuneCoachP
   const [isBlind, setIsBlind] = useState(false);
   const [stopped, setStopped] = useState(false);
   const [results, setResults] = useState<PlayerResult[]>([]);
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     const socket = getSocket();

@@ -1,8 +1,11 @@
 // Socket.io 클라이언트 연결 관리
-import { io, Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 import { ClientToServerEvents, ServerToClientEvents } from '@/types/socket';
 
-let socket: Socket<ServerToClientEvents, ClientToServerEvents> | null = null;
+// Socket 타입 정의
+type SocketType = ReturnType<typeof io>;
+
+let socket: SocketType | null = null;
 
 // Socket URL 동적 생성 (모바일 지원)
 const getSocketUrl = (): string => {
@@ -22,7 +25,7 @@ const getSocketUrl = (): string => {
 };
 
 // Socket 연결 생성
-export const connectSocket = (): Socket<ServerToClientEvents, ClientToServerEvents> => {
+export const connectSocket = (): SocketType => {
   if (!socket) {
     socket = io(getSocketUrl(), {
       transports: ['websocket', 'polling'], // polling도 허용 (모바일 호환성)
@@ -35,15 +38,15 @@ export const connectSocket = (): Socket<ServerToClientEvents, ClientToServerEven
     });
     
     // 재연결 이벤트 로깅
-    socket.on('reconnect', (attemptNumber) => {
+    socket.on('reconnect', (attemptNumber: number) => {
       console.log('Socket 재연결 성공:', attemptNumber);
     });
     
-    socket.on('reconnect_attempt', (attemptNumber) => {
+    socket.on('reconnect_attempt', (attemptNumber: number) => {
       console.log('Socket 재연결 시도:', attemptNumber);
     });
     
-    socket.on('reconnect_error', (error) => {
+    socket.on('reconnect_error', (error: Error) => {
       console.log('Socket 재연결 오류:', error);
     });
     
@@ -63,7 +66,7 @@ export const disconnectSocket = (): void => {
 };
 
 // Socket 인스턴스 가져오기
-export const getSocket = (): Socket<ServerToClientEvents, ClientToServerEvents> | null => {
+export const getSocket = (): SocketType | null => {
   return socket;
 };
 

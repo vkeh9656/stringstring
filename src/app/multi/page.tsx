@@ -19,7 +19,7 @@ export default function MultiModePage() {
     // Socket 연결
     const socket = connectSocket();
 
-    socket.on('room:created', (data) => {
+    socket.on('room:created', (data: Parameters<ServerToClientEvents['room:created']>[0]) => {
       setCreatedRoomId(data.roomId);
       // 호스트 정보를 sessionStorage에 저장
       sessionStorage.setItem('multiUser', JSON.stringify({
@@ -27,13 +27,13 @@ export default function MultiModePage() {
         isHost: true,
       }));
       // 방 정보도 저장 (호스트도 참가자 목록에 표시되도록)
-      if (data.room) {
-        sessionStorage.setItem('multiRoom', JSON.stringify(data.room));
+      if ((data as any).room) {
+        sessionStorage.setItem('multiRoom', JSON.stringify((data as any).room));
       }
       router.push(`/multi/room/${data.roomId}`);
     });
 
-    socket.on('room:joined', (data) => {
+    socket.on('room:joined', (data: Parameters<ServerToClientEvents['room:joined']>[0]) => {
       // 참가자 정보를 sessionStorage에 저장
       sessionStorage.setItem('multiUser', JSON.stringify({
         ...data.user,
@@ -44,7 +44,7 @@ export default function MultiModePage() {
       router.push(`/multi/room/${data.room.roomId}`);
     });
 
-    socket.on('room:error', (data) => {
+    socket.on('room:error', (data: Parameters<ServerToClientEvents['room:error']>[0]) => {
       setError(data.message);
     });
 

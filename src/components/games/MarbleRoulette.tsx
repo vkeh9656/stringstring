@@ -85,7 +85,7 @@ type WinCondition = 'first' | 'last';
 export default function MarbleRoulette() {
   const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
   const obstaclesRef = useRef<MovingObstacle[]>([]);
   const bumpersRef = useRef<Bumper[]>([]);
   const wallsRef = useRef<Wall[]>([]);
@@ -427,24 +427,7 @@ export default function MarbleRoulette() {
         ctx.translate(-zoom.x, -zoom.y);
       }
 
-      // 맵별 배경 효과
-      if (selectedMap === 'pinball') {
-        // 핀볼 그리드 패턴
-        ctx.strokeStyle = 'rgba(0, 212, 255, 0.1)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i < width; i += 20) {
-          ctx.beginPath();
-          ctx.moveTo(i, 0);
-          ctx.lineTo(i, height);
-          ctx.stroke();
-        }
-        for (let i = 0; i < height; i += 20) {
-          ctx.beginPath();
-          ctx.moveTo(0, i);
-          ctx.lineTo(width, i);
-          ctx.stroke();
-        }
-      }
+      // 맵별 배경 효과 (필요시 추가)
 
       // 벽 그리기
       ctx.strokeStyle = '#00d4ff';

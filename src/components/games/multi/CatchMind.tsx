@@ -245,7 +245,7 @@ export default function CatchMind({ gameData, isHost, onBackToRoom }: CatchMindP
     if (gameOver) return;
     
     const timer = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev: number) => {
         if (prev <= 1) {
           clearInterval(timer);
           return 0;

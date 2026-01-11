@@ -63,8 +63,8 @@ db.exec(`
 
 // 트랜잭션 헬퍼
 export const transaction = <T>(fn: (db: Database.Database) => T): T => {
-  const transaction = db.transaction(fn);
-  return transaction();
+  const transactionFn = db.transaction(fn);
+  return transactionFn() as T;
 };
 
 // 방 관련 함수

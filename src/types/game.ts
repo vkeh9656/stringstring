@@ -1,5 +1,19 @@
 // 게임 관련 타입 정의
 
+// 터치 포인트 타입
+export interface TouchPoint {
+  id: number;
+  x: number;
+  y: number;
+}
+
+// Shake It 게임 설정
+export interface ShakeItSettings {
+  sensitivity: 'low' | 'medium' | 'high' | 'random';
+  totalLimit: number;
+  currentCount: number;
+}
+
 // 사용자 타입
 export interface User {
   userId: string;
@@ -21,16 +35,18 @@ export interface Room {
 }
 
 // Tune Coach 게임 데이터
+export interface PlayerResult {
+  userId: string;
+  nickname: string;
+  stopTime: number;
+  error: number;
+  rank: number | null;
+}
+
 export interface TuneCoachData {
   targetTime: number;
   startTime: number;
-  playerResults: {
-    userId: string;
-    nickname: string;
-    stopTime: number;
-    error: number;
-    rank: number | null;
-  }[];
+  playerResults: PlayerResult[];
   blindTime: number;
 }
 
