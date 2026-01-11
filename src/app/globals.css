@@ -24,3 +24,44 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 텍스트 선택 방지 - 모든 페이지에서 적용 */
+* {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important; /* iOS에서 길게 누르기 메뉴 방지 */
+  -webkit-tap-highlight-color: transparent !important; /* 터치 하이라이트 제거 */
+  -webkit-user-drag: none !important;
+  -khtml-user-drag: none !important;
+  -moz-user-drag: none !important;
+  -o-user-drag: none !important;
+  user-drag: none !important;
+}
+
+/* 텍스트 요소에도 강제 적용 (버튼 제외) */
+p, h1, h2, h3, h4, h5, h6, span, div, label {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+
+/* 버튼과 링크는 터치 이벤트 허용 */
+button, a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1) !important;
+  pointer-events: auto !important;
+}
+
+/* 입력 필드는 텍스트 선택 허용 */
+input,
+textarea,
+[contenteditable] {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
