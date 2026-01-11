@@ -115,8 +115,8 @@ export default function MarbleRoulette() {
     
     switch (mapType) {
       case 'zigzag': {
-        // 지그재그 벽 (세그먼트 증가)
-        const segments = 10;
+        // 지그재그 벽 (세그먼트 증가 - 코스 길이 증가)
+        const segments = 15; // 10 -> 15로 증가 (1.5배)
         const segmentHeight = height / segments;
         const indent = width * 0.28;
         
@@ -143,8 +143,8 @@ export default function MarbleRoulette() {
       }
       
       case 'funnel': {
-        // 깔때기 - 점점 좁아지는 벽 (섹션 증가)
-        const sections = 8;
+        // 깔때기 - 점점 좁아지는 벽 (섹션 증가 - 코스 길이 증가)
+        const sections = 12; // 8 -> 12로 증가 (1.5배)
         for (let i = 0; i < sections; i++) {
           const y1 = i * (height / sections);
           const y2 = (i + 1) * (height / sections);
@@ -172,8 +172,8 @@ export default function MarbleRoulette() {
       
       
       case 'chaos': {
-        // 카오스 - 랜덤한 벽들 (항상 경사 있게)
-        for (let i = 0; i < 25; i++) {
+        // 카오스 - 랜덤한 벽들 (항상 경사 있게) - 벽 개수 증가
+        for (let i = 0; i < 35; i++) { // 25 -> 35로 증가 (1.4배)
           const x = 50 + Math.random() * (width - 100);
           const y = 60 + Math.random() * (height - 150);
           // 최소 15도 ~ 최대 75도 경사 (수평 방지)
@@ -231,8 +231,8 @@ export default function MarbleRoulette() {
     
     switch (mapType) {
       case 'zigzag': {
-        // 회전 막대 (더 많이, 전체 영역에)
-        const rows = 6;
+        // 회전 막대 (더 많이, 전체 영역에) - 장애물 개수 및 속도 증가
+        const rows = 9; // 6 -> 9로 증가 (1.5배)
         const cols = 4;
         const startY = height * 0.15;
         const rowHeight = (height * 0.7) / rows;
@@ -243,7 +243,7 @@ export default function MarbleRoulette() {
               (col + 1) * (width / (cols + 1)),
               startY + row * rowHeight,
               35 + Math.random() * 15,
-              (0.025 + Math.random() * 0.025) * 1.5, // 속도 1.5배 증가
+              (0.025 + Math.random() * 0.025) * 2.5, // 속도 2.5배로 증가 (1.5배 -> 2.5배)
               'bar'
             ));
           }
@@ -252,13 +252,13 @@ export default function MarbleRoulette() {
       }
       
       case 'funnel': {
-        // 좌우로 움직이는 막대 (더 많이)
-        for (let i = 0; i < 8; i++) {
+        // 좌우로 움직이는 막대 (더 많이) - 장애물 개수 및 속도 증가
+        for (let i = 0; i < 12; i++) { // 8 -> 12로 증가 (1.5배)
           obstacles.push(createSwingObstacle(
             width / 2 + (i % 2 === 0 ? -30 : 30),
             120 + i * 80,
             50 - (i % 4) * 5,
-            (0.035 + Math.random() * 0.02) * 1.5, // 속도 1.5배 증가
+            (0.035 + Math.random() * 0.02) * 2.5, // 속도 2.5배로 증가 (1.5배 -> 2.5배)
             'bar'
           ));
         }
@@ -266,13 +266,13 @@ export default function MarbleRoulette() {
       }
       
       case 'chaos': {
-        // 다양한 회전 장애물 (더 많이)
-        for (let i = 0; i < 20; i++) {
+        // 다양한 회전 장애물 (더 많이) - 장애물 개수 및 속도 증가
+        for (let i = 0; i < 30; i++) { // 20 -> 30으로 증가 (1.5배)
           obstacles.push(createSwingObstacle(
             55 + Math.random() * (width - 110),
             80 + Math.random() * (height - 180),
             22 + Math.random() * 28,
-            (0.02 + Math.random() * 0.04) * 1.5, // 속도 1.5배 증가
+            (0.02 + Math.random() * 0.04) * 2.5, // 속도 2.5배로 증가 (1.5배 -> 2.5배)
             'spinner'
           ));
         }
@@ -922,7 +922,7 @@ export default function MarbleRoulette() {
               <canvas
                 ref={canvasRef}
                 width={350}
-                height={700}
+                height={1000}
                 className="max-w-full max-h-full"
               />
             </div>
