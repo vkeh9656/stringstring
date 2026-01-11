@@ -8,6 +8,7 @@
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:server\"",
     "build": "next build",
     "start": "next start",
+    "start:server": "tsx server/index.ts",
     "lint": "eslint"
   },
   "dependencies": {

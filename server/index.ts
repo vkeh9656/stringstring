@@ -9,8 +9,9 @@ import { roomQueries, userQueries, gameStateQueries } from './db';
 const httpServer = createServer();
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
   cors: {
-    origin: '*', // 모든 origin 허용 (개발/테스트용)
+    origin: process.env.CLIENT_URL || process.env.NEXT_PUBLIC_SOCKET_URL || '*', // 프로덕션에서는 특정 도메인으로 제한 권장
     methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
 
