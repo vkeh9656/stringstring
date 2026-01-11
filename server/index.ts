@@ -108,6 +108,15 @@ io.on('connection', (socket) => {
         return;
       }
 
+      // 같은 방에 같은 닉네임이 있는지 체크
+      const duplicateNickname = room.userList.some(
+        (user) => user.nickname.toLowerCase().trim() === data.nickname.toLowerCase().trim()
+      );
+      if (duplicateNickname) {
+        socket.emit('room:error', { message: '이미 같은 닉네임이 방에 있습니다. 다른 닉네임을 사용해주세요.' });
+        return;
+      }
+
       const userId = generateUserId();
       const user: User = {
         userId,

@@ -46,6 +46,8 @@ export default function MultiModePage() {
 
     socket.on('room:error', (data: Parameters<ServerToClientEvents['room:error']>[0]) => {
       setError(data.message);
+      // alert로도 표시
+      alert(data.message);
     });
 
     return () => {
