@@ -9,7 +9,7 @@ let socket: SocketType | null = null;
 
 // Socket URL 동적 생성 (모바일 지원)
 const getSocketUrl = (): string => {
-  // 환경 변수가 설정되어 있으면 사용
+  // 환경 변수가 설정되어 있으면 우선 사용 (프로덕션 배포 시 필수)
   if (process.env.NEXT_PUBLIC_SOCKET_URL) {
     return process.env.NEXT_PUBLIC_SOCKET_URL;
   }
@@ -17,7 +17,18 @@ const getSocketUrl = (): string => {
   // 브라우저 환경에서 현재 호스트 기반으로 소켓 URL 생성
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    return `http://${hostname}:3001`;
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+    
+    // 개발 환경: localhost에서 포트 3001 사용
+    if (isLocalhost) {
+      return 'ws://localhost:3001';
+    }
+    
+    // 프로덕션 환경: HTTPS면 WSS 사용 (별도 서버 배포 필요)
+    // 주의: 프로덕션에서는 반드시 NEXT_PUBLIC_SOCKET_URL 환경 변수를 설정해야 함
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    console.warn('⚠️ NEXT_PUBLIC_SOCKET_URL이 설정되지 않았습니다. Socket.io 서버를 별도로 배포하고 환경 변수를 설정하세요.');
+    return `${protocol}//${hostname}:3001`; // 임시 (실제로는 작동하지 않을 수 있음)
   }
   
   // 서버 사이드 렌더링 시 기본값
