@@ -390,7 +390,7 @@ export default function MarbleRoulette() {
 
     const baseGravity = 0.5;  // 중력 증가 (0.2 → 0.5)
     const friction = 0.998;   // 마찰 감소 (0.995 → 0.998)
-    const bounceFactor = 0.65;
+    const bounceFactor = 0.4; // 바운스 감소 (0.65 → 0.4) - 경로 이탈 방지
     const finishLine = height - 35;
     const minSpeed = 0.5;     // 최소 속도 (멈춤 방지)
 
@@ -598,11 +598,11 @@ export default function MarbleRoulette() {
             const nx = dx / distance;
             const ny = dy / distance;
             
-            // 적당히 튕기기 (강도 감소)
+            // 적당히 튕기기 (강도 감소) - 바운스 줄임
             const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
-            const bounceStrength = 0.7;
-            ball.vx = nx * (speed * bounceStrength + 1.5);
-            ball.vy = ny * (speed * bounceStrength + 1.5);
+            const bounceStrength = 0.5; // 0.7 -> 0.5로 감소
+            ball.vx = nx * (speed * bounceStrength + 0.8); // 1.5 -> 0.8로 감소
+            ball.vy = ny * (speed * bounceStrength + 0.8); // 1.5 -> 0.8로 감소
             
             // 위치 보정
             const overlap = ball.radius + bumper.radius - distance;
@@ -627,8 +627,8 @@ export default function MarbleRoulette() {
             ball.x += collision.normal.x * collision.depth;
             ball.y += collision.normal.y * collision.depth;
             
-            ball.vx += obs.speed * Math.cos(obs.angle) * 8;
-            ball.vy += obs.speed * Math.sin(obs.angle) * 8;
+            ball.vx += obs.speed * Math.cos(obs.angle) * 4; // 8 -> 4로 감소 (바운스 줄임)
+            ball.vy += obs.speed * Math.sin(obs.angle) * 4; // 8 -> 4로 감소 (바운스 줄임)
           }
         });
 
