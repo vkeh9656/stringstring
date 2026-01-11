@@ -27,6 +27,8 @@
 NODE_ENV=production
 ```
 
+**참고**: Node.js 버전은 `package.json`의 `engines` 필드와 `.nvmrc` 파일로 자동 설정됩니다 (Node.js 20).
+
 ## 5단계: 배포 확인
 
 1. "Deployments" 탭에서 배포 상태 확인
