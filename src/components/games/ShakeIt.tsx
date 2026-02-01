@@ -87,7 +87,7 @@ export default function ShakeIt() {
         {showSettings && (
           <div className="flex-1 flex items-center justify-center">
             <div className="w-full space-y-4 rounded-2xl bg-white p-6 shadow-xl">
-              <h1 className="text-center text-2xl font-bold text-gray-800">🍾 Shake it</h1>
+              <h1 className="text-center text-2xl font-bold text-gray-800">🍾 병 터뜨리기</h1>
               <p className="text-center text-sm text-gray-600">화면을 클릭해 병을 터뜨리세요!</p>
               
               <button

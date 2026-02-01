@@ -5,6 +5,7 @@ import ShakeIt from '@/components/games/ShakeIt';
 import FingerRadar from '@/components/games/FingerRadar';
 import MarbleRoulette from '@/components/games/MarbleRoulette';
 import SpinRoulette from '@/components/games/SpinRoulette';
+import SmallTalkCard from '@/components/games/SmallTalkCard';
 
 // Single Mode 게임 페이지 (동적 라우팅)
 export default function SingleGamePage() {
@@ -21,6 +22,8 @@ export default function SingleGamePage() {
         return <MarbleRoulette />;
       case 'spin-roulette':
         return <SpinRoulette />;
+      case 'small-talk-card':
+        return <SmallTalkCard />;
       default:
         return (
           <div className="flex min-h-screen items-center justify-center">

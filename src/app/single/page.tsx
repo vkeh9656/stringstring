@@ -18,7 +18,7 @@ export default function SingleModePage() {
     {
       id: 'finger-radar',
       name: '손가락 레이더',
-      description: '화면에 닿은 손가락으로 당첨자 찾기',
+      description: '화면에 닿은 손가락으로\n당첨자 찾기',
       emoji: '👆',
       color: 'from-blue-400 to-purple-500',
     },
@@ -36,6 +36,13 @@ export default function SingleModePage() {
       emoji: '🎰',
       color: 'from-pink-400 to-red-500',
     },
+    {
+      id: 'small-talk-card',
+      name: '스몰톡 카드',
+      description: '아이스브레이킹 주제 카드',
+      emoji: '💬',
+      color: 'from-green-400 to-teal-500',
+    },
   ];
 
   const handleGameSelect = (gameId: string) => {
@@ -52,7 +59,7 @@ export default function SingleModePage() {
         >
           ← 뒤로
         </Link>
-        <h1 className="text-2xl font-bold text-gray-800">혼자하기</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Single Mode</h1>
         <div className="w-20"></div> {/* 공간 맞추기 */}
       </div>
 
