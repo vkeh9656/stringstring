@@ -43,6 +43,13 @@ export default function SingleModePage() {
       emoji: '💬',
       color: 'from-green-400 to-teal-500',
     },
+    {
+      id: 'food-roulette',
+      name: '음식 룰렛',
+      description: '가중치 룰렛으로 음식 선택',
+      emoji: '🍕',
+      color: 'from-orange-400 to-red-500',
+    },
   ];
 
   const handleGameSelect = (gameId: string) => {

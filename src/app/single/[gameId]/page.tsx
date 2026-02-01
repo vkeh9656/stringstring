@@ -6,6 +6,7 @@ import FingerRadar from '@/components/games/FingerRadar';
 import MarbleRoulette from '@/components/games/MarbleRoulette';
 import SpinRoulette from '@/components/games/SpinRoulette';
 import SmallTalkCard from '@/components/games/SmallTalkCard';
+import WeightedRoulette from '@/components/games/WeightedRoulette';
 
 // Single Mode 게임 페이지 (동적 라우팅)
 export default function SingleGamePage() {
@@ -24,6 +25,8 @@ export default function SingleGamePage() {
         return <SpinRoulette />;
       case 'small-talk-card':
         return <SmallTalkCard />;
+      case 'food-roulette':
+        return <WeightedRoulette />;
       default:
         return (
           <div className="flex min-h-screen items-center justify-center">
