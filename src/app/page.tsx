@@ -6,15 +6,15 @@ import Link from 'next/link';
 // 메인 페이지 - 모드 선택
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-950 p-4">
       <div className="w-full max-w-md space-y-8 text-center">
         {/* 타이틀 */}
         <div className="space-y-4">
           <h1 className="text-5xl font-bold text-white drop-shadow-lg">
-            🎮 파티 게임
+            🪢 끈끈
           </h1>
           <p className="text-xl text-white/90">
-            오프라인 모임에서 바로 즐기는 인터랙티브 게임
+            어제보다 오늘 더 멋진 우리
           </p>
         </div>
 
@@ -22,21 +22,16 @@ export default function Home() {
         <div className="space-y-4">
           <Link
             href="/single"
-            className="block w-full rounded-2xl bg-white/90 px-8 py-6 text-2xl font-bold text-purple-600 shadow-xl transition-all hover:scale-105 hover:bg-white active:scale-95"
+            className="block w-full rounded-2xl bg-white/95 px-8 py-6 text-2xl font-bold text-indigo-700 shadow-xl transition-all hover:scale-105 hover:bg-white hover:shadow-2xl active:scale-95"
           >
-            📱 혼자하기
+            📱 Single Mode
           </Link>
           <Link
             href="/multi"
-            className="block w-full rounded-2xl bg-white/90 px-8 py-6 text-2xl font-bold text-pink-600 shadow-xl transition-all hover:scale-105 hover:bg-white active:scale-95"
+            className="block w-full rounded-2xl bg-white/95 px-8 py-6 text-2xl font-bold text-purple-700 shadow-xl transition-all hover:scale-105 hover:bg-white hover:shadow-2xl active:scale-95"
           >
-            👥 함께하기
+            👥 Multi Mode
           </Link>
-        </div>
-
-        {/* 설명 */}
-        <div className="rounded-xl bg-white/20 p-4 text-sm text-white/80 backdrop-blur-sm">
-          <p>💡 한 대의 스마트폰으로 바로 시작하세요!</p>
         </div>
       </div>
     </div>

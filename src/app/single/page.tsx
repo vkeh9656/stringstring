@@ -10,7 +10,7 @@ export default function SingleModePage() {
   const games = [
     {
       id: 'shake-it',
-      name: 'Shake it',
+      name: '병 터뜨리기',
       description: '화면을 클릭해 병 터뜨리기',
       emoji: '🍾',
       color: 'from-yellow-400 to-orange-500',
@@ -18,7 +18,7 @@ export default function SingleModePage() {
     {
       id: 'finger-radar',
       name: '손가락 레이더',
-      description: '손가락으로 당첨자 찾기',
+      description: '화면에 닿은 손가락으로 당첨자 찾기',
       emoji: '👆',
       color: 'from-blue-400 to-purple-500',
     },
@@ -26,13 +26,13 @@ export default function SingleModePage() {
       id: 'marble-roulette',
       name: '마블 룰렛',
       description: '구슬 레이싱 (최대 50명)',
-      emoji: '🎰',
+      emoji: '🔮',
       color: 'from-indigo-400 to-purple-500',
     },
     {
       id: 'spin-roulette',
       name: '랜덤 숫자 뽑기',
-      description: '숫자 돌려서 당첨자 뽑기 (최대 20명)',
+      description: '당첨자 뽑기 (최대 20명)',
       emoji: '🎰',
       color: 'from-pink-400 to-red-500',
     },
