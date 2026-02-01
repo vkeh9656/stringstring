@@ -334,7 +334,7 @@ export default function WeightedRoulette() {
                       }}
                     >
                       <div
-                        className="absolute inset-0 flex items-center justify-end pr-2 text-xs font-bold text-white"
+                        className="absolute inset-0 flex items-center justify-end pr-2 text-xs font-bold text-black drop-shadow-lg"
                         style={{
                           transform: `rotate(${-segmentAngle / 2}deg)`,
                           writingMode: segmentAngle < 30 ? 'vertical-rl' : 'horizontal-tb',
@@ -342,9 +342,6 @@ export default function WeightedRoulette() {
                       >
                         <div className="text-center">
                           <div className="truncate max-w-[60px]">{participant.name}</div>
-                          {segmentAngle > 20 && (
-                            <div className="text-[10px] opacity-80">x{participant.weight}</div>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -372,8 +369,7 @@ export default function WeightedRoulette() {
                     style={{ backgroundColor: colors[index % colors.length] }}
                   ></div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-xs truncate">{participant.name}</div>
-                    <div className="text-[10px] text-gray-500">x{participant.weight}</div>
+                    <div className="font-semibold text-xs truncate text-black">{participant.name}</div>
                   </div>
                 </div>
               ))}
@@ -400,9 +396,6 @@ export default function WeightedRoulette() {
                 <div className="text-6xl mb-4">🎉</div>
                 <h2 className="text-3xl font-bold text-yellow-800">당첨!</h2>
                 <p className="mt-4 text-4xl font-bold text-gray-900">{winner.name}</p>
-                <p className="mt-2 text-lg text-gray-600">
-                  가중치: {winner.weight} (확률: {((winner.weight / totalWeight) * 100).toFixed(1)}%)
-                </p>
               </div>
 
               <div className="space-y-2">
