@@ -192,7 +192,7 @@ export default function WeightedRoulette() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && e.ctrlKey && handleAddParticipants()}
-              placeholder="이름 입력 (쉼표로 구분)&#10;예: 짱구*5, 짱아*10, 봉미선*3"
+              placeholder={`이름 입력 (쉼표로 구분)\n예: 짱구*5, 짱아*10, 봉미선*3`}
               className="w-full rounded-lg border-2 border-gray-300 px-4 py-3 focus:border-purple-500 focus:outline-none"
               rows={3}
             />
