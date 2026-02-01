@@ -179,8 +179,8 @@ export default function WeightedRoulette() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100 p-4">
       {showSettings ? (
         <div className="w-full max-w-md space-y-6 rounded-2xl bg-white p-8 shadow-xl">
-          <h1 className="text-center text-3xl font-bold text-gray-800">🎰 가중치 룰렛</h1>
-          <p className="text-center text-sm text-gray-600">
+          <h1 className="text-center text-3xl font-bold text-black">🎰 가중치 룰렛</h1>
+          <p className="text-center text-sm text-black">
             이름만 입력하거나 이름*가중치 형식으로 입력하세요
             <br />
             예: 짱구*5, 짱아*10, 봉미선*3
@@ -208,7 +208,7 @@ export default function WeightedRoulette() {
           {/* 참가자 목록 */}
           {participants.length > 0 && (
             <div className="max-h-64 space-y-2 overflow-y-auto">
-              <div className="text-sm font-semibold text-gray-700">음식 목록</div>
+              <div className="text-sm font-semibold text-black">음식 목록</div>
               {participants.map((participant, index) => (
                 <div
                   key={index}
@@ -244,7 +244,7 @@ export default function WeightedRoulette() {
                         {participant.name}
                       </div>
                     )}
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-black">
                       확률: {((participant.weight / totalWeight) * 100).toFixed(1)}%
                     </div>
                   </div>
@@ -387,7 +387,7 @@ export default function WeightedRoulette() {
           )}
 
           {spinning && (
-            <div className="text-2xl font-bold text-gray-700">돌아가는 중...</div>
+            <div className="text-2xl font-bold text-black">돌아가는 중...</div>
           )}
 
           {winner && (
