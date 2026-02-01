@@ -39,7 +39,7 @@ export default function SingleModePage() {
     {
       id: 'small-talk-card',
       name: '스몰톡 카드',
-      description: '아이스브레이킹 주제 카드',
+      description: '질문이 담긴 카드',
       emoji: '💬',
       color: 'from-green-400 to-teal-500',
     },
@@ -50,34 +50,34 @@ export default function SingleModePage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-purple-100 to-pink-100 p-4">
+    <div className="flex h-screen flex-col bg-gradient-to-br from-purple-100 to-pink-100 p-3 sm:p-4 overflow-hidden">
       {/* 헤더 */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="flex-shrink-0 mb-3 sm:mb-4 flex items-center justify-between">
         <Link
           href="/"
-          className="rounded-full bg-white/80 px-4 py-2 text-lg font-semibold text-gray-700 shadow-md transition-all hover:bg-white"
+          className="rounded-full bg-white/80 px-3 py-1.5 sm:px-4 sm:py-2 text-base sm:text-lg font-semibold text-gray-700 shadow-md transition-all hover:bg-white"
         >
           ← 뒤로
         </Link>
-        <h1 className="text-2xl font-bold text-gray-800">Single Mode</h1>
-        <div className="w-20"></div> {/* 공간 맞추기 */}
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Single Mode</h1>
+        <div className="w-16 sm:w-20"></div> {/* 공간 맞추기 */}
       </div>
 
-      {/* 게임 목록 */}
-      <div className="mx-auto w-full max-w-2xl space-y-4">
+      {/* 게임 목록 - 반응형 높이 조절 */}
+      <div className="flex-1 mx-auto w-full max-w-2xl space-y-2 sm:space-y-3 overflow-y-auto">
         {games.map((game) => (
           <button
             key={game.id}
             onClick={() => handleGameSelect(game.id)}
-            className={`w-full rounded-2xl bg-gradient-to-r ${game.color} p-6 text-left shadow-lg transition-all hover:scale-105 active:scale-95`}
+            className={`w-full rounded-xl sm:rounded-2xl bg-gradient-to-r ${game.color} p-3 sm:p-4 md:p-5 text-left shadow-lg transition-all hover:scale-105 active:scale-95`}
           >
-            <div className="flex items-center gap-4">
-              <div className="text-5xl">{game.emoji}</div>
-              <div className="flex-1">
-                <h2 className="text-2xl font-bold text-white">{game.name}</h2>
-                <p className="text-white/90">{game.description}</p>
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+              <div className="text-3xl sm:text-4xl md:text-5xl flex-shrink-0">{game.emoji}</div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white truncate">{game.name}</h2>
+                <p className="text-xs sm:text-sm md:text-base text-white/90 line-clamp-1">{game.description}</p>
               </div>
-              <div className="text-2xl text-white/80">→</div>
+              <div className="text-xl sm:text-2xl text-white/80 flex-shrink-0">→</div>
             </div>
           </button>
         ))}
