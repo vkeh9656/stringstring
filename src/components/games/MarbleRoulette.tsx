@@ -294,8 +294,8 @@ export default function MarbleRoulette() {
         id: i,
         x: startX,
         y: startY,
-        vx: (Math.random() - 0.5) * 2,
-        vy: Math.random() * 2 + 1,
+        vx: (Math.random() - 0.5) * 4,  // 초기 좌우 속도 2배 (2 → 4)
+        vy: Math.random() * 4 + 2,      // 초기 낙하 속도 2배 (2+1 → 4+2)
         radius: 10,
         number: i + 1,
         color: COLORS[i % COLORS.length],
@@ -388,11 +388,11 @@ export default function MarbleRoulette() {
     let gameWinner: number | null = null;
     let lastBall: number | null = null;
 
-    const baseGravity = 0.5;  // 중력 증가 (0.2 → 0.5)
-    const friction = 0.998;   // 마찰 감소 (0.995 → 0.998)
+    const baseGravity = 1.0;  // 중력 2배 증가 (0.5 → 1.0)
+    const friction = 0.999;   // 마찰 더 감소 (0.998 → 0.999) - 속도 유지
     const bounceFactor = 0.55; // 바운스 약간 감소 (0.65 → 0.55) - 튕김 줄이되 속도 유지
     const finishLine = height - 35;
-    const minSpeed = 0.5;     // 최소 속도 (멈춤 방지)
+    const minSpeed = 1.0;     // 최소 속도 2배 증가 (0.5 → 1.0)
 
     const animate = () => {
       // 20초 경과 체크 - 빨리감기 활성화
@@ -540,10 +540,10 @@ export default function MarbleRoulette() {
         // 구슬이 너무 느려지면 최소 속도 유지 (멈춤 방지)
         const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
         if (speed < minSpeed && ball.y < finishLine - 50) {
-          // 아래로 약간의 속도 추가
-          ball.vy += 0.3;
-          // 좌우 랜덤 흔들림
-          ball.vx += (Math.random() - 0.5) * 0.5;
+          // 아래로 속도 추가 (2배 증가)
+          ball.vy += 0.6;
+          // 좌우 랜덤 흔들림 (2배 증가)
+          ball.vx += (Math.random() - 0.5) * 1.0;
         }
 
         ball.x += ball.vx * timeScale;
