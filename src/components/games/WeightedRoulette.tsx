@@ -299,61 +299,86 @@ export default function WeightedRoulette() {
       ) : (
         <div className="w-full max-w-2xl space-y-6 text-center">
           {/* 룰렛 */}
-          <div className="relative mx-auto aspect-square w-full max-w-lg">
-            <div
-              className="relative h-full w-full rounded-full border-8 border-gray-800 shadow-2xl transition-transform duration-[3000ms] ease-out"
+          <div className="relative mx-auto w-full max-w-lg">
+            {/* 화살표 (상단 고정) */}
+            <div className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-2">
+              <div className="text-5xl drop-shadow-lg">▼</div>
+            </div>
+            
+            {/* SVG 룰렛 */}
+            <svg
+              viewBox="0 0 400 400"
+              className="w-full h-full drop-shadow-2xl transition-transform duration-[3000ms] ease-out"
               style={{
                 transform: `rotate(${rotation}deg)`,
               }}
             >
+              {/* 외곽 원 */}
+              <circle cx="200" cy="200" r="195" fill="none" stroke="#1f2937" strokeWidth="10" />
+              
+              {/* 파이 세그먼트 */}
               {participants.map((participant, index) => {
-                let startAngle = 0;
+                // 각 세그먼트의 시작 각도 계산
+                let startAngle = -90; // 12시 방향에서 시작
                 for (let i = 0; i < index; i++) {
                   startAngle += getSegmentAngle(participants[i].weight);
                 }
                 const segmentAngle = getSegmentAngle(participant.weight);
-
+                const endAngle = startAngle + segmentAngle;
+                
+                // SVG arc path 계산
+                const startRad = (startAngle * Math.PI) / 180;
+                const endRad = (endAngle * Math.PI) / 180;
+                
+                const x1 = 200 + 190 * Math.cos(startRad);
+                const y1 = 200 + 190 * Math.sin(startRad);
+                const x2 = 200 + 190 * Math.cos(endRad);
+                const y2 = 200 + 190 * Math.sin(endRad);
+                
+                const largeArcFlag = segmentAngle > 180 ? 1 : 0;
+                
+                const pathD = `M 200 200 L ${x1} ${y1} A 190 190 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+                
+                // 텍스트 위치 계산 (세그먼트 중앙)
+                const midAngle = startAngle + segmentAngle / 2;
+                const midRad = (midAngle * Math.PI) / 180;
+                const textRadius = 120; // 텍스트가 표시될 반경
+                const textX = 200 + textRadius * Math.cos(midRad);
+                const textY = 200 + textRadius * Math.sin(midRad);
+                
                 return (
-                  <div
-                    key={index}
-                    className="absolute left-1/2 top-1/2 origin-bottom"
-                    style={{
-                      transform: `translate(-50%, -100%) rotate(${startAngle}deg)`,
-                      transformOrigin: '50% 100%',
-                      width: '50%',
-                      height: '50%',
-                    }}
-                  >
-                    <div
-                      className="h-full w-full relative"
+                  <g key={index}>
+                    {/* 파이 세그먼트 */}
+                    <path
+                      d={pathD}
+                      fill={colors[index % colors.length]}
+                      stroke="#fff"
+                      strokeWidth="2"
+                    />
+                    {/* 텍스트 */}
+                    <text
+                      x={textX}
+                      y={textY}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="#000"
+                      fontSize={segmentAngle < 20 ? "10" : segmentAngle < 40 ? "12" : "14"}
+                      fontWeight="bold"
                       style={{
-                        backgroundColor: colors[index % colors.length],
-                        clipPath: `polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)`,
-                        transform: `rotate(${segmentAngle / 2}deg)`,
-                        transformOrigin: '50% 100%',
+                        textShadow: '1px 1px 2px rgba(255,255,255,0.8)',
                       }}
+                      transform={`rotate(${midAngle + 90}, ${textX}, ${textY})`}
                     >
-                      <div
-                        className="absolute inset-0 flex items-center justify-end pr-2 text-xs font-bold text-black drop-shadow-lg"
-                        style={{
-                          transform: `rotate(${-segmentAngle / 2}deg)`,
-                          writingMode: segmentAngle < 30 ? 'vertical-rl' : 'horizontal-tb',
-                        }}
-                      >
-                        <div className="text-center">
-                          <div className="truncate max-w-[60px]">{participant.name}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                      {participant.name.length > 6 ? participant.name.slice(0, 6) + '...' : participant.name}
+                    </text>
+                  </g>
                 );
               })}
-            </div>
-
-            {/* 화살표 */}
-            <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-2">
-              <div className="text-5xl drop-shadow-lg">▼</div>
-            </div>
+              
+              {/* 중심 원 */}
+              <circle cx="200" cy="200" r="25" fill="#1f2937" />
+              <circle cx="200" cy="200" r="20" fill="#fff" />
+            </svg>
           </div>
 
           {/* 참가자 정보 */}
