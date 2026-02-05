@@ -83,26 +83,25 @@ export default function WeightedRoulette() {
     setSpinning(true);
     setWinner(null);
 
-    // 균등 확률로 랜덤 선택
-    const selectedIndex = Math.floor(Math.random() * items.length);
-
-    // 회전 애니메이션 (5-10바퀴 + 선택된 항목 위치)
+    // 회전 애니메이션 (5-10바퀴 + 랜덤 각도)
     const spins = 5 + Math.random() * 5;
-    
-    // 선택된 세그먼트의 중앙 각도 (12시 방향 기준)
-    const targetAngle = selectedIndex * segmentAngle + segmentAngle / 2;
-    
-    // 약간의 랜덤 오프셋 (세그먼트 범위 내에서만)
-    const randomOffset = (Math.random() - 0.5) * segmentAngle * 0.5;
-    
-    // 화살표가 12시 방향에 있으므로, 선택된 항목이 12시에 오도록 회전
-    const totalRotation = rotation + spins * 360 + (360 - targetAngle) + randomOffset;
+    const randomAngle = Math.random() * 360;
+    const totalRotation = rotation + spins * 360 + randomAngle;
 
     setRotation(totalRotation);
 
-    // 회전 애니메이션 후 당첨자 결정
+    // 회전 애니메이션 후 화살표가 가리키는 세그먼트를 당첨자로 결정
     setTimeout(() => {
-      setWinner(items[selectedIndex]);
+      // 최종 회전 각도를 0-360 범위로 정규화
+      const normalizedRotation = totalRotation % 360;
+      
+      // 화살표는 12시 방향(상단)에 고정
+      // 룰렛이 시계방향으로 회전하므로, 화살표가 가리키는 세그먼트 계산
+      // 세그먼트는 12시 방향(0도)에서 시계방향으로 배치됨
+      const pointerAngle = (360 - normalizedRotation + 360) % 360;
+      const winnerIndex = Math.floor(pointerAngle / segmentAngle) % items.length;
+      
+      setWinner(items[winnerIndex]);
       setSpinning(false);
 
       // 진동 피드백
