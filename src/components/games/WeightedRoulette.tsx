@@ -136,9 +136,22 @@ export default function WeightedRoulette() {
 
     // 회전 애니메이션 (5-10바퀴 + 랜덤)
     const spins = 5 + Math.random() * 5;
-    const segmentAngle = 360 / participants.length;
-    const targetAngle = selectedIndex * segmentAngle + segmentAngle / 2;
-    const randomOffset = (Math.random() - 0.5) * segmentAngle * 0.8;
+    
+    // 가중치 기반 세그먼트 각도 계산 (동일 크기 가정 X)
+    const getAngle = (weight: number) => (weight / totalWeight) * 360;
+    
+    // 선택된 세그먼트의 시작 각도 계산
+    let targetStartAngle = 0;
+    for (let i = 0; i < selectedIndex; i++) {
+      targetStartAngle += getAngle(participants[i].weight);
+    }
+    
+    // 선택된 세그먼트의 중앙 각도
+    const selectedSegmentAngle = getAngle(participants[selectedIndex].weight);
+    const targetAngle = targetStartAngle + selectedSegmentAngle / 2;
+    
+    // 약간의 랜덤 오프셋 (세그먼트 범위 내에서만)
+    const randomOffset = (Math.random() - 0.5) * selectedSegmentAngle * 0.6;
     const totalRotation = rotation + spins * 360 + (360 - targetAngle) + randomOffset;
 
     setRotation(totalRotation);
