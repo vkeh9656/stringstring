@@ -1,107 +1,67 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
-// 가중치 룰렛 게임 컴포넌트 (마블 룰렛 스타일)
-interface Participant {
-  name: string;
-  weight: number; // 가중치 (기본 1)
-}
-
+// 음식 룰렛 컴포넌트 (균등 분할)
 // 한국인이 좋아하는 음식 Top 10 (기본 세팅)
-const DEFAULT_FOODS: Participant[] = [
-  { name: '치킨', weight: 10 },
-  { name: '피자', weight: 9 },
-  { name: '삼겹살', weight: 8 },
-  { name: '라면', weight: 7 },
-  { name: '초밥', weight: 6 },
-  { name: '떡볶이', weight: 5 },
-  { name: '햄버거', weight: 4 },
-  { name: '파스타', weight: 3 },
-  { name: '김밥', weight: 2 },
-  { name: '비빔밥', weight: 1 },
+const DEFAULT_FOODS: string[] = [
+  '치킨', '피자', '삼겹살', '라면', '초밥',
+  '떡볶이', '햄버거', '파스타', '김밥', '비빔밥',
 ];
 
 export default function WeightedRoulette() {
   const router = useRouter();
-  const [participants, setParticipants] = useState<Participant[]>(DEFAULT_FOODS);
+  const [items, setItems] = useState<string[]>(DEFAULT_FOODS);
   const [inputText, setInputText] = useState('');
   const [spinning, setSpinning] = useState(false);
-  const [winner, setWinner] = useState<Participant | null>(null);
+  const [winner, setWinner] = useState<string | null>(null);
   const [rotation, setRotation] = useState(0);
   const [showSettings, setShowSettings] = useState(true);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editingName, setEditingName] = useState('');
 
-  // 입력 파싱 (이름*가중치 형식 또는 이름만)
-  const parseInput = (text: string): Participant[] => {
-    const items = text.split(',').map((item) => item.trim()).filter(Boolean);
-    const parsed: Participant[] = [];
-
-    items.forEach((item) => {
-      if (item.includes('*')) {
-        const [name, weightStr] = item.split('*').map((s) => s.trim());
-        const weight = parseInt(weightStr) || 1;
-        if (name) {
-          parsed.push({ name, weight: Math.max(1, weight) });
-        }
-      } else {
-        parsed.push({ name: item, weight: 1 });
-      }
-    });
-
-    return parsed;
+  // 입력 파싱 (쉼표로 구분)
+  const parseInput = (text: string): string[] => {
+    return text.split(',').map((item) => item.trim()).filter(Boolean);
   };
 
-  // 참가자 추가
-  const handleAddParticipants = () => {
+  // 항목 추가
+  const handleAddItems = () => {
     if (!inputText.trim()) return;
 
     const parsed = parseInput(inputText);
     if (parsed.length === 0) return;
 
-    // 기존 참가자와 합치기 (중복 제거)
-    const newParticipants = [...participants];
-    parsed.forEach((newPart) => {
-      const existingIndex = newParticipants.findIndex(
-        (p) => p.name === newPart.name
-      );
-      if (existingIndex >= 0) {
-        newParticipants[existingIndex].weight = newPart.weight;
-      } else {
-        newParticipants.push(newPart);
+    // 기존 항목과 합치기 (중복 제거)
+    const newItems = [...items];
+    parsed.forEach((newItem) => {
+      if (!newItems.includes(newItem)) {
+        newItems.push(newItem);
       }
     });
 
-    setParticipants(newParticipants);
+    setItems(newItems);
     setInputText('');
   };
 
-  // 참가자 삭제
-  const handleRemoveParticipant = (index: number) => {
-    setParticipants(participants.filter((_, i) => i !== index));
-  };
-
-  // 가중치 변경
-  const handleWeightChange = (index: number, newWeight: number) => {
-    const updated = [...participants];
-    updated[index].weight = Math.max(1, Math.min(100, newWeight));
-    setParticipants(updated);
+  // 항목 삭제
+  const handleRemoveItem = (index: number) => {
+    setItems(items.filter((_, i) => i !== index));
   };
 
   // 이름 편집 시작
   const handleStartEdit = (index: number) => {
     setEditingIndex(index);
-    setEditingName(participants[index].name);
+    setEditingName(items[index]);
   };
 
   // 이름 편집 완료
   const handleFinishEdit = (index: number) => {
     if (editingName.trim()) {
-      const updated = [...participants];
-      updated[index].name = editingName.trim();
-      setParticipants(updated);
+      const updated = [...items];
+      updated[index] = editingName.trim();
+      setItems(updated);
     }
     setEditingIndex(null);
     setEditingName('');
@@ -113,52 +73,36 @@ export default function WeightedRoulette() {
     setEditingName('');
   };
 
+  // 균등 분할 각도 계산
+  const segmentAngle = items.length > 0 ? 360 / items.length : 360;
+
   // 룰렛 돌리기
   const handleSpin = useCallback(() => {
-    if (participants.length < 1 || spinning) return;
+    if (items.length < 1 || spinning) return;
 
     setSpinning(true);
     setWinner(null);
 
-    // 가중치 기반 당첨 확률 계산
-    const totalWeight = participants.reduce((sum, p) => sum + p.weight, 0);
-    const random = Math.random() * totalWeight;
-    
-    let currentWeight = 0;
-    let selectedIndex = 0;
-    for (let i = 0; i < participants.length; i++) {
-      currentWeight += participants[i].weight;
-      if (random <= currentWeight) {
-        selectedIndex = i;
-        break;
-      }
-    }
+    // 균등 확률로 랜덤 선택
+    const selectedIndex = Math.floor(Math.random() * items.length);
 
-    // 회전 애니메이션 (5-10바퀴 + 랜덤)
+    // 회전 애니메이션 (5-10바퀴 + 선택된 항목 위치)
     const spins = 5 + Math.random() * 5;
     
-    // 가중치 기반 세그먼트 각도 계산 (동일 크기 가정 X)
-    const getAngle = (weight: number) => (weight / totalWeight) * 360;
-    
-    // 선택된 세그먼트의 시작 각도 계산
-    let targetStartAngle = 0;
-    for (let i = 0; i < selectedIndex; i++) {
-      targetStartAngle += getAngle(participants[i].weight);
-    }
-    
-    // 선택된 세그먼트의 중앙 각도
-    const selectedSegmentAngle = getAngle(participants[selectedIndex].weight);
-    const targetAngle = targetStartAngle + selectedSegmentAngle / 2;
+    // 선택된 세그먼트의 중앙 각도 (12시 방향 기준)
+    const targetAngle = selectedIndex * segmentAngle + segmentAngle / 2;
     
     // 약간의 랜덤 오프셋 (세그먼트 범위 내에서만)
-    const randomOffset = (Math.random() - 0.5) * selectedSegmentAngle * 0.6;
+    const randomOffset = (Math.random() - 0.5) * segmentAngle * 0.5;
+    
+    // 화살표가 12시 방향에 있으므로, 선택된 항목이 12시에 오도록 회전
     const totalRotation = rotation + spins * 360 + (360 - targetAngle) + randomOffset;
 
     setRotation(totalRotation);
 
     // 회전 애니메이션 후 당첨자 결정
     setTimeout(() => {
-      setWinner(participants[selectedIndex]);
+      setWinner(items[selectedIndex]);
       setSpinning(false);
 
       // 진동 피드백
@@ -166,11 +110,11 @@ export default function WeightedRoulette() {
         navigator.vibrate([200, 100, 200]);
       }
     }, 3000);
-  }, [participants, spinning, rotation]);
+  }, [items, spinning, rotation, segmentAngle]);
 
   // 다시하기
   const handleReset = () => {
-    setParticipants([]);
+    setItems([]);
     setWinner(null);
     setRotation(0);
     setShowSettings(true);
@@ -184,33 +128,29 @@ export default function WeightedRoulette() {
     '#9B59B6', '#1ABC9C', '#F39C12', '#E67E22',
   ];
 
-  // 가중치에 따른 세그먼트 크기 계산
-  const totalWeight = participants.reduce((sum, p) => sum + p.weight, 0);
-  const getSegmentAngle = (weight: number) => (weight / totalWeight) * 360;
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100 p-4">
       {showSettings ? (
         <div className="w-full max-w-md space-y-6 rounded-2xl bg-white p-8 shadow-xl">
-          <h1 className="text-center text-3xl font-bold text-black">🎰 가중치 룰렛</h1>
+          <h1 className="text-center text-3xl font-bold text-black">🍕 음식 룰렛</h1>
           <p className="text-center text-sm text-black">
-            이름만 입력하거나 이름*가중치 형식으로 입력하세요
+            쉼표로 구분하여 음식을 입력하세요
             <br />
-            예: 짱구*5, 짱아*10, 봉미선*3
+            예: 치킨, 피자, 짜장면
           </p>
 
-          {/* 참가자 입력 */}
+          {/* 항목 입력 */}
           <div className="space-y-2">
             <textarea
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && e.ctrlKey && handleAddParticipants()}
-              placeholder={`이름 입력 (쉼표로 구분)\n예: 짱구*5, 짱아*10, 봉미선*3`}
+              onKeyPress={(e) => e.key === 'Enter' && e.ctrlKey && handleAddItems()}
+              placeholder={`음식 입력 (쉼표로 구분)\n예: 치킨, 피자, 짜장면`}
               className="w-full rounded-lg border-2 border-gray-300 px-4 py-3 focus:border-purple-500 focus:outline-none"
-              rows={3}
+              rows={2}
             />
             <button
-              onClick={handleAddParticipants}
+              onClick={handleAddItems}
               disabled={!inputText.trim()}
               className="w-full rounded-lg bg-purple-500 px-6 py-2 font-bold text-white transition-all hover:bg-purple-600 disabled:bg-gray-300"
             >
@@ -218,11 +158,13 @@ export default function WeightedRoulette() {
             </button>
           </div>
 
-          {/* 참가자 목록 */}
-          {participants.length > 0 && (
+          {/* 항목 목록 */}
+          {items.length > 0 && (
             <div className="max-h-64 space-y-2 overflow-y-auto">
-              <div className="text-sm font-semibold text-black">음식 목록</div>
-              {participants.map((participant, index) => (
+              <div className="text-sm font-semibold text-black">
+                음식 목록 ({items.length}개) - 각 {(100 / items.length).toFixed(1)}% 확률
+              </div>
+              {items.map((item, index) => (
                 <div
                   key={index}
                   className="flex items-center gap-2 rounded-lg bg-gray-100 p-3"
@@ -238,7 +180,7 @@ export default function WeightedRoulette() {
                         value={editingName}
                         onChange={(e) => setEditingName(e.target.value)}
                         onBlur={() => handleFinishEdit(index)}
-                        onKeyPress={(e) => {
+                        onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             handleFinishEdit(index);
                           } else if (e.key === 'Escape') {
@@ -254,41 +196,12 @@ export default function WeightedRoulette() {
                         onClick={() => handleStartEdit(index)}
                         title="클릭하여 이름 수정"
                       >
-                        {participant.name}
+                        {item}
                       </div>
                     )}
-                    <div className="text-xs text-black">
-                      확률: {((participant.weight / totalWeight) * 100).toFixed(1)}%
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => handleWeightChange(index, participant.weight - 1)}
-                      className="h-8 w-8 rounded-lg bg-gray-300 text-lg font-bold hover:bg-gray-400 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={participant.weight <= 1}
-                      title="가중치 감소"
-                    >
-                      -
-                    </button>
-                    <input
-                      type="number"
-                      value={participant.weight}
-                      onChange={(e) => handleWeightChange(index, parseInt(e.target.value) || 1)}
-                      min="1"
-                      max="100"
-                      className="w-14 rounded-lg border-2 border-gray-300 px-2 py-1 text-center text-sm font-semibold focus:border-purple-500 focus:outline-none"
-                    />
-                    <button
-                      onClick={() => handleWeightChange(index, participant.weight + 1)}
-                      className="h-8 w-8 rounded-lg bg-gray-300 text-lg font-bold hover:bg-gray-400 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={participant.weight >= 100}
-                      title="가중치 증가"
-                    >
-                      +
-                    </button>
                   </div>
                   <button
-                    onClick={() => handleRemoveParticipant(index)}
+                    onClick={() => handleRemoveItem(index)}
                     className="text-red-500 hover:text-red-700 flex-shrink-0 px-2 py-1 rounded hover:bg-red-50 transition-all"
                     title="삭제"
                   >
@@ -300,13 +213,17 @@ export default function WeightedRoulette() {
           )}
 
           {/* 시작 버튼 */}
-          {participants.length >= 1 && (
+          {items.length >= 2 && (
             <button
               onClick={() => setShowSettings(false)}
               className="w-full rounded-xl bg-purple-500 px-6 py-4 text-lg font-bold text-white transition-all hover:bg-purple-600 active:scale-95"
             >
-              룰렛 시작 ({participants.length}명)
+              룰렛 시작 ({items.length}개)
             </button>
+          )}
+          
+          {items.length === 1 && (
+            <p className="text-center text-sm text-red-500">최소 2개 이상 입력해주세요</p>
           )}
         </div>
       ) : (
@@ -329,14 +246,10 @@ export default function WeightedRoulette() {
               {/* 외곽 원 */}
               <circle cx="200" cy="200" r="195" fill="none" stroke="#1f2937" strokeWidth="10" />
               
-              {/* 파이 세그먼트 */}
-              {participants.map((participant, index) => {
-                // 각 세그먼트의 시작 각도 계산
-                let startAngle = -90; // 12시 방향에서 시작
-                for (let i = 0; i < index; i++) {
-                  startAngle += getSegmentAngle(participants[i].weight);
-                }
-                const segmentAngle = getSegmentAngle(participant.weight);
+              {/* 파이 세그먼트 (균등 분할) */}
+              {items.map((item, index) => {
+                // 각 세그먼트의 시작/끝 각도 (12시 방향에서 시작)
+                const startAngle = -90 + index * segmentAngle;
                 const endAngle = startAngle + segmentAngle;
                 
                 // SVG arc path 계산
@@ -355,7 +268,7 @@ export default function WeightedRoulette() {
                 // 텍스트 위치 계산 (세그먼트 중앙)
                 const midAngle = startAngle + segmentAngle / 2;
                 const midRad = (midAngle * Math.PI) / 180;
-                const textRadius = 120; // 텍스트가 표시될 반경
+                const textRadius = 120;
                 const textX = 200 + textRadius * Math.cos(midRad);
                 const textY = 200 + textRadius * Math.sin(midRad);
                 
@@ -375,14 +288,14 @@ export default function WeightedRoulette() {
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fill="#000"
-                      fontSize={segmentAngle < 20 ? "10" : segmentAngle < 40 ? "12" : "14"}
+                      fontSize={items.length > 10 ? "10" : items.length > 6 ? "12" : "14"}
                       fontWeight="bold"
                       style={{
                         textShadow: '1px 1px 2px rgba(255,255,255,0.8)',
                       }}
                       transform={`rotate(${midAngle + 90}, ${textX}, ${textY})`}
                     >
-                      {participant.name.length > 6 ? participant.name.slice(0, 6) + '...' : participant.name}
+                      {item.length > 6 ? item.slice(0, 6) + '...' : item}
                     </text>
                   </g>
                 );
@@ -394,10 +307,10 @@ export default function WeightedRoulette() {
             </svg>
           </div>
 
-          {/* 참가자 정보 */}
+          {/* 항목 정보 */}
           <div className="rounded-xl bg-white p-4 shadow-lg">
             <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-3 md:grid-cols-4">
-              {participants.map((participant, index) => (
+              {items.map((item, index) => (
                 <div
                   key={index}
                   className="flex items-center gap-2 rounded-lg bg-gray-100 p-2"
@@ -407,7 +320,7 @@ export default function WeightedRoulette() {
                     style={{ backgroundColor: colors[index % colors.length] }}
                   ></div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-xs truncate text-black">{participant.name}</div>
+                    <div className="font-semibold text-xs truncate text-black">{item}</div>
                   </div>
                 </div>
               ))}
@@ -433,7 +346,7 @@ export default function WeightedRoulette() {
               <div className="rounded-2xl bg-gradient-to-br from-yellow-100 to-orange-100 p-8">
                 <div className="text-6xl mb-4">🎉</div>
                 <h2 className="text-3xl font-bold text-yellow-800">당첨!</h2>
-                <p className="mt-4 text-4xl font-bold text-gray-900">{winner.name}</p>
+                <p className="mt-4 text-4xl font-bold text-gray-900">{winner}</p>
               </div>
 
               <div className="space-y-2">
@@ -463,5 +376,3 @@ export default function WeightedRoulette() {
     </div>
   );
 }
-
-
